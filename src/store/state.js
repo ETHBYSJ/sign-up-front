@@ -6,5 +6,7 @@ export default {
     mail: '',
     company: '',
     job: '',
+    phone: '',
+    wx: '',
   },
 }

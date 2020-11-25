@@ -14,7 +14,22 @@
 
         <div class="index_right_wapper">
           <div class="index_right_login" v-if="userState==1">
-            <h3 class="index_right_title">身份验证</h3>
+            <div class="index_right_login1" v-if="leftStatus==1">
+              <h3 class="index_right_title">身份验证</h3>
+              <div class="index_right_phone">
+                <div class="index_right_num">手机号:</div>
+                <div class="index_right_btn" @click="authPhone">验证</div>
+              </div>
+              <div class="index_right_input">
+                <data-input v-for="inputObj in inputObjList" 
+                  :key="inputObj.name"
+                  :inputObj="inputObj">
+                </data-input>
+              </div>
+              <div class="index_right_next_box">
+                <div class="index_right_next_btn" @click="submitAuth">下一步</div>
+              </div>
+            </div>
           </div>
           <div class="index_right_logout" v-else>未登录，请先登录！</div>
         </div>
@@ -25,12 +40,36 @@
 
 <script>
 import { mapState } from 'vuex'
+import DataInput from '../components/DataInput/DataInput.vue'
 import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 
 export default {
   data() {
     return {
-      leftStatus: 0,
+      leftStatus: 1,
+      showPhoneError: false,
+      inputObjList: [
+        {
+          name: '姓名',
+          star: true,
+          content: '',
+        },
+        {
+          name: '单位',
+          star: true,
+          content: '',
+        },
+        {
+          name: '职务',
+          star: true,
+          content: '',
+        },
+        {
+          name: '邮箱',
+          star: false,
+          content: '',
+        }
+      ]
     }
   },
 
@@ -39,8 +78,21 @@ export default {
   },
 
   components: { 
-    HeadNavigation 
+    HeadNavigation,
+    DataInput 
   },
+
+  methods: {
+    authPhone() {
+      this.showPhoneError = false
+    },
+    
+    submitAuth() {
+      if(this.userInfo == '') {
+        this.showPhoneError = true
+      }
+    }
+  }
   
 }
 </script>

@@ -6,7 +6,7 @@ module.exports = {
   chainWebpack: config => {
     // 修复HMR
     config.resolve.symlinks(true);
-   },
+  },
 
 　css: {
     // 是否使用css分离插件 ExtractTextPlugin
@@ -17,6 +17,6 @@ module.exports = {
     loaderOptions: {
     },
     // 启用 CSS modules for all css / pre-processor files.
-    modules: false,
-  },
+    requireModuleExtension: false,
+  }
 };
