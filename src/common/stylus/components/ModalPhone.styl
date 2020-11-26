@@ -1,0 +1,85 @@
+.modal_phone_main
+  height: 100%
+  width 100%
+  background-color: rgba(0, 0, 0, 0.5)
+  position: fixed
+  top 0
+  left 0
+  z-index 999
+  .modal_phone_container
+    height 100%
+    width 100%
+    position relative
+    .modal_phone_box
+      height 290px
+      width 420px
+      position: absolute
+      left 50%
+      top 50%
+      transform: translate(-50%, -50%)
+      -moz-transform: translate(-50%, -50%)
+      -webkit-transform: translate(-50%, -50%)
+      background-color: white
+      display: flex
+      flex-flow: column
+      .modal_phone_top
+        background-color: #064b80
+        line-height: 64px
+        color white
+        padding 0 24px
+        font-weight: bold
+        .modal_phone_title
+          font-size 20px
+          float left
+        .modal_phone_close
+          float right
+          cursor pointer
+          font-size 16px
+          img
+            width 15px
+            margin-left 6px
+            position relative
+            top -1px
+          &:hover
+            opacity 0.8
+      .modal_phone_bot
+        flex: 1
+        padding 14px 24px
+        display: flex
+        flex-flow: column
+        .modal_phone_bot_mid
+          .code_input
+            width 240px
+            float left
+          .code_btn
+            float right
+            font-weight: bold
+            color: rgba(0, 0, 0, 0.26)
+            background-color: rgba(0, 0, 0, 0.12);
+            height 40px
+            width 115px
+            border-radius: 4px
+            margin-top 5px
+            text-align: center
+            line-height: 40px
+            cursor not-allowed
+            &.active
+              background-color #064b80
+              cursor pointer
+              color white
+        .modal_phone_bot_bot
+          flex 1
+          .send_btn
+            font-weight: bold
+            color: rgba(0, 0, 0, 0.26)
+            background-color: rgba(0, 0, 0, 0.12);
+            height 40px
+            border-radius: 4px
+            margin-top 5px
+            text-align: center
+            line-height: 40px
+            cursor not-allowed
+            &.active
+              background-color #064b80
+              cursor pointer
+              color white

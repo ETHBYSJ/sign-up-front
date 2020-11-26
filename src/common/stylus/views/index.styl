@@ -1,11 +1,8 @@
 .index_main
   height 100%      
-  display: flex
-  flex-flow: column
   background-color: #ebebeb
   .index_container
     position relative
-    flex 1
     .index_wapper
       height: 100% 
       width: 900px
@@ -21,7 +18,7 @@
             border-top 1px solid #dddddd
             font-size 18px
             font-weight: bold
-            color #094275
+            color #064b80
             cursor: pointer
             &.inactive
               cursor not-allowed
@@ -62,20 +59,20 @@
                 border 2px solid green
                 border-radius: 8px
                 font-weight: bold
-                color #094275
+                color #064b80
                 cursor pointer
                 &:hover
                   opacity: 0.8
-            .index_right_input
+            .index_right_inputs
               padding 24px 110px
             .index_right_next_box
               height: 100px
               padding 40px 0 30px
               .index_right_next_btn
-                background-color: #094275
-                height 30px
-                width 60px
-                line-height: 30px
+                background-color: #064b80
+                height 35px
+                width 80px
+                line-height: 35px
                 font-size 13px
                 border-radius: 4px
                 text-align: center
@@ -85,4 +82,10 @@
                 cursor pointer
                 &:hover
                   opacity: 0.8
-
+          .index_right_login2
+            height: 100%
+            .index_right_title
+              text-align: center
+              line-height: 45px
+              color #064b80
+              border-bottom: 1px solid #e8e8e8

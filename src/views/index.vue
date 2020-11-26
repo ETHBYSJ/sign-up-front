@@ -1,14 +1,13 @@
 <template>
   <div class="index_main">
-    <head-navigation></head-navigation>
-
     <div class="index_container">
-      <div class="index_wapper">
+      <head-navigation></head-navigation>
+      <div class="index_wapper clearfix">
         <div class="index_left_wapper">
           <ul class="index_left_panel">
             <li class="index_left_option" :class="[{inactive: userState==0}, {active: userState==1&&leftStatus==1}]" @click="leftStatus=1">身份验证</li>
-            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==2}]" @click="leftStatus=2">名单申报</li>
-            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==3}]" @click="leftStatus=3">资料上传</li>
+            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==2}]" @click="toPanel(2)">名单申报</li>
+            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==3}]" @click="toPanel(3)">资料上传</li>
           </ul>
         </div>
 
@@ -20,8 +19,8 @@
                 <div class="index_right_num">手机号:</div>
                 <div class="index_right_btn" @click="authPhone">验证</div>
               </div>
-              <div class="index_right_input">
-                <data-input v-for="inputObj in inputObjList" 
+              <div class="index_right_inputs">
+                <data-input class="index_right_input" v-for="inputObj in inputObjList" 
                   :key="inputObj.name"
                   :inputObj="inputObj">
                 </data-input>
@@ -30,46 +29,42 @@
                 <div class="index_right_next_btn" @click="submitAuth">下一步</div>
               </div>
             </div>
+
+            <div class="index_right_login2" v-else-if="leftStatus==2">
+              <h3 class="index_right_title">名单申报</h3>
+            </div>
           </div>
           <div class="index_right_logout" v-else>未登录，请先登录！</div>
         </div>
       </div>
     </div>
+
+    <modal-phone v-if="showModalPhone">
+    </modal-phone>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { DataInputConfig } from "../common/javascript/model/data-input-config.js"
 import DataInput from '../components/DataInput/DataInput.vue'
 import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
+import ModalPhone from '../components/ModalPhone/ModalPhone.vue'
 
 export default {
   data() {
     return {
       leftStatus: 1,
       showPhoneError: false,
+      showModalPhone: false,
       inputObjList: [
-        {
-          name: '姓名',
-          star: true,
-          content: '',
-        },
-        {
-          name: '单位',
-          star: true,
-          content: '',
-        },
-        {
-          name: '职务',
-          star: true,
-          content: '',
-        },
-        {
-          name: '邮箱',
-          star: false,
-          content: '',
-        }
-      ]
+        new DataInputConfig('姓名', true, '', '', ''),
+        new DataInputConfig('单位', true, '', '', ''),
+        new DataInputConfig('职务', true, '', '', ''),
+        new DataInputConfig('邮箱', false, '', '', ''),
+      ],
+       
+      declareList: [],
     }
   },
 
@@ -79,12 +74,24 @@ export default {
 
   components: { 
     HeadNavigation,
-    DataInput 
+    DataInput,
+    ModalPhone 
   },
 
   methods: {
+    toPanel(index) {
+      if (this.userAuth == 1) {
+        this.leftStatus = index
+      }
+    },
+
     authPhone() {
       this.showPhoneError = false
+      this.showModalPhone = true
+    },
+
+    closeModalPhone() {
+      this.showModalPhone = false
     },
     
     submitAuth() {

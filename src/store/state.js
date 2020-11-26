@@ -1,6 +1,6 @@
 export default {
   userState: 1,
-  userAuth: 0,
+  userAuth: 1,
   userInfo: {
     name: '',
     mail: '',
