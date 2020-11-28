@@ -28,6 +28,7 @@
 
 <script>
 import DataInput from '../DataInput/DataInput.vue'
+import { DataInputConfig } from '../../common/javascript/model/data-input-config'
 import { isMobile } from '../../utils/util.js'
 
 export default {
@@ -36,22 +37,10 @@ export default {
       timing: null, // 定时器
       codeActive: false, // 记录手机号合法情况
       timeActive: true,  // 记录定时器情况
-      sendActive: false,
+      sendActive: true,
       codeText: '获取验证码',
-      phoneObj: {
-        name: '手机号',
-        star: true,
-        content: '',
-        placeholder: '请输入手机号',
-        dangerText: '',
-      },
-      codeObj: {
-        name: '',
-        star: true,
-        content: '',
-        placeholder: '验证码',
-        dangerText: '',
-      }
+      phoneObj: new DataInputConfig('手机号', true, '', '请输入手机号', ''),
+      codeObj: new DataInputConfig('', true, '', '验证码', ''),
     }
   },
   
@@ -75,7 +64,7 @@ export default {
         return
       
       // 判断xxx 假设通过
-      this.sendActive = true
+      // this.sendActive = true
       this.countSecond()
     },
 

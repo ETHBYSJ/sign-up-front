@@ -7,6 +7,6 @@ export class DeclareMsg {
     this.company = new DataInputConfig('工作单位', true, '', '', '')
     this.job = new DataInputConfig('姓名', false, '', '', '')
     this.phone = new DataInputConfig('手机', false, '', '', '')
-    this.identity = new DataInputConfig('参会身份', true, '', '', '')
+    this.identity = new DataInputConfig('参会身份', false, '', '', '')
   }
 }
