@@ -1,10 +1,7 @@
 export default {
-  login(state, {id, mobile, name, department, postion, email}) {
-    state.userInfo.id = id
-    state.userInfo.mobile = mobile
-    state.userInfo.name = name
+  login(state, {user}) {
+    state.userInfo = user
     state.userState = 1
-    console.log(state)
   },
 
   logout(state) {

@@ -1,5 +1,20 @@
 export default {
-  userInfo: 1,
-  userState: 1,
-  userAuth: 1,
+  userInfo: {
+    id: '',
+    updateAt: 0,
+    name: '',
+    mobile: '',
+    email: '',
+    loginAt: 0,
+    status: '',
+    role: '',
+    department: '',
+    position: '',
+    extra: '',
+    wechatOpenId: '',
+    subscribed: false,
+    unionid: '',
+  },
+  userState: 0,
+  userAuth: 0,
 }

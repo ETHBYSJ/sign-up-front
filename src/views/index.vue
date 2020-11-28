@@ -17,7 +17,7 @@
               <h2 class="index_right_title">身份验证</h2>
               <div class="index_right_phone">
                 <div class="index_right_num">手机号:</div>
-                <div class="index_right_num">{{userInfo.mobile}}</div>
+                <div class="index_right_num">{{secretMobile}}</div>
                 <div class="index_right_btn" @click="authPhone">验证</div>
               </div>
               <div class="index_right_inputs">
@@ -85,10 +85,10 @@ export default {
   computed: {
     ...mapState(['userInfo', 'userAuth', 'userState']),
 
-    //secretMobile() {
-    //  if (this.userInfo.mobile.length != 11) return '未绑定'
-    //  return this.userInfo.mobile.slice(0, 6) + 'XXXXX'
-    //}
+    secretMobile() {
+      if (this.userInfo.mobile.length != 11) return '未绑定'
+      return this.userInfo.mobile.slice(0, 6) + 'XXXXX'
+    }
   },
 
   components: { 
