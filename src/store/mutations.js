@@ -1,30 +1,23 @@
 export default {
-  login(state, {user}) {
-    state.userInfo = user
+  save_userInfo(state, {userInfo}) {
+    state.userInfo = userInfo
     state.userState = 1
   },
 
-  logout(state) {
-    state.userInfo = {
-      id: '',
-      mobile: '',
-      name: '',
-      email: '',
-      department: '',
-      position: ''
-    }
+  clear_userInfo(state) {
+    state.userInfo = {}
     state.userState = 0
   },
 
-  bindMobile(state, mobile) {
-    state.userInfo.mobile = mobile
-  },
-
-  changeUserInfo(state, name, department, position, email) {
+  change_authInfo(state, name, department, position, email) {
     state.userInfo.name = name
     state.userInfo.position = position
     state.userInfo.department = department
     state.userInfo.email = email
+  },
+
+  bindMobile(state, mobile) {
+    state.userInfo.mobile = mobile
   },
 
   displayMobile(state) {

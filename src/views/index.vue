@@ -34,14 +34,32 @@
             <div class="index_right_login2" v-else-if="leftStatus==2">
               <h2 class="index_right_title">名单申报</h2>
               <div class="index_right_scroll">
-                <vue-scroll :Ops="scrollOps">
-                  <declare-inputs class="dec_inputs" v-for="dec in declareList" 
-                    :key="dec.name"
-                    :decObj="dec">
+                <vue-scroll>
+                  <declare-inputs class="dec_inputs" v-for="dec in declareList" :key="dec.name.name" :decObj="dec">
                   </declare-inputs>
                 </vue-scroll>
               </div>
               <div class="index_right_btn_box"></div>
+            </div>
+
+            <div class="index_right_login3" v-else-if="leftStatus==3">
+              <h2 class="index_right_title">文件上传</h2>
+              <div class="sample_file_wapper">
+                <div class="sample_file_title">示例文件：</div>
+                <div class="sample_file_name">{{sampleFileName}}</div>
+                <div class="sample_file_intro">
+                  <p>请下载审批参会材料范本，按实际情况填写后并上传</p>
+                  <br>
+                  <p>材料一经上传后不可更改，请谨慎填写！</p>
+                </div>
+              </div>
+              <div class="upload_file_wapper">
+                <div class="upload_file_title">资料文件：</div>
+                <div class="upload_file_btn"></div>
+                <div class="upload_file_intro">
+                  请选择文件上传当地主管部门审批参会材料！
+                </div>
+              </div>
             </div>
           </div>
           <div class="index_right_logout" v-else>未登录，请先登录！</div>
@@ -62,6 +80,7 @@ import DataInput from '../components/DataInput/DataInput.vue'
 import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 import ModalPhone from '../components/ModalPhone/ModalPhone.vue'
 import DeclareInputs from '../components/DeclareInputs/DeclareInputs.vue'
+import { reqSendCode, reqCheckCode, reqGetUserInfo, reqChangeUserInfo } from '../api/request'
 
 export default {
   data() {
@@ -77,22 +96,15 @@ export default {
       declareList: [
         new DeclareMsg(),
       ],
+      sampleFileName: '审批参会材料范本.doc'
     }
   },
 
   mounted() {
-    this.login().then(() =>{
-      this.inputObjList[0].content = this.userInfo.name
-      this.inputObjList[1].content = this.userInfo.department
-      this.inputObjList[2].content = this.userInfo.position
-      this.inputObjList[3].content = this.userInfo.email
-      if (this.userAuth == 1) {
-        this.leftStatus = 2
-      }
-    }).catch(() => {
-
-    })
-    
+    // 获取登录信息
+    reqGetUserInfo().then(res => {
+      this.login(res.data.data)
+    }).catch(err => {})   
   },
 
   computed: {
@@ -100,7 +112,29 @@ export default {
   },
 
   watch: {
+    'userInfo.name': function(val) {
+      this.inputObjList[0].content = val
+    },
 
+    'userInfo.department': function(val) {
+      this.inputObjList[1].content = val
+    },
+
+    'userInfo.position': function(val) {
+      this.inputObjList[2].content = val
+    },
+
+    'userInfo.email': function(val) {
+      this.inputObjList[3].content = val
+    },
+
+    'userAuth': function(val) {
+      if (val === 1) {
+        this.leftStatus = 2
+      } else {
+        this.leftStatus = 1
+      }
+    }
   },
 
   components: { 
@@ -129,7 +163,24 @@ export default {
     },
 
     submitAuth() {
-      if(this.userInfo.mobile == '') return
+      if (this.checkAuth !== true) return
+
+      const data = {
+        name: this.inputObjList[0].content, 
+        department: this.inputObjList[1].content, 
+        postion: this.inputObjList[2].content, 
+        email: this.inputObjList[3].content
+      };
+      reqChangeUserInfo(data).then(res => {
+        this.leftStatus = 2
+      }).catch(err => {
+
+      })
+
+    },
+
+    checkAuth() {
+      if(this.userInfo.mobile == '') return false
       var flag = true
       if (this.inputObjList[0].content == '') {
         flag = false
@@ -143,18 +194,7 @@ export default {
         flag = false
         this.inputObjList[2].dangerText = '请输入职务'
       }
-      if (flag === false) return
-
-      this.changeUserInfo(
-        this.inputObjList[0].content, 
-        this.inputObjList[1].content, 
-        this.inputObjList[2].content, 
-        this.inputObjList[3].content
-      ).then(() => { // 成功
-        this.leftStatus = 2
-      }).catch(() => { // 失败
-
-      })
+      return flag
     }
   }
   

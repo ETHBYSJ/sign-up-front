@@ -2,9 +2,9 @@
   <div class="decs_main">
     <data-input :inputObj="decObj.name"></data-input>
     <data-input :inputObj="decObj.number"></data-input>
-    <data-input :inputObj="decObj.company"></data-input>
-    <data-input :inputObj="decObj.job"></data-input>
-    <data-input :inputObj="decObj.phone"></data-input>
+    <data-input :inputObj="decObj.department"></data-input>
+    <data-input :inputObj="decObj.position"></data-input>
+    <data-input :inputObj="decObj.mobile"></data-input>
     <data-input :inputObj="decObj.identity"></data-input>
   </div>
 </template>
@@ -21,5 +21,6 @@ export default {
 </script>
 
 <style lang="stylus">
-
+.decs_main
+  padding 0 14px
 </style>
