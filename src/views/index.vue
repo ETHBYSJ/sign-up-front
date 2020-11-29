@@ -27,7 +27,7 @@
                 </data-input>
               </div>
               <div class="index_right_next_box">
-                <div class="index_right_next_btn" @click="submitAuth">下一步</div>
+                <div class="index_right_next_btn" :class="{active: userInfo.mobile.length === 11}" @click="submitAuth">下一步</div>
               </div>
             </div>
 
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { DataInputConfig } from '../common/javascript/model/data-input-config.js'
 import { DeclareMsg } from '../common/javascript/model/declare-msg.js'
 import DataInput from '../components/DataInput/DataInput.vue'
@@ -67,7 +67,6 @@ export default {
   data() {
     return {
       leftStatus: 1,
-      showPhoneError: false,
       showModalPhone: false,
       inputObjList: [
         new DataInputConfig('姓名', true, '', '', ''),
@@ -78,17 +77,30 @@ export default {
       declareList: [
         new DeclareMsg(),
       ],
-
     }
   },
 
-  computed: {
-    ...mapState(['userInfo', 'userAuth', 'userState']),
+  mounted() {
+    this.login().then(() =>{
+      this.inputObjList[0].content = this.userInfo.name
+      this.inputObjList[1].content = this.userInfo.department
+      this.inputObjList[2].content = this.userInfo.position
+      this.inputObjList[3].content = this.userInfo.email
+      if (this.userAuth == 1) {
+        this.leftStatus = 2
+      }
+    }).catch(() => {
 
-    secretMobile() {
-      if (this.userInfo.mobile.length != 11) return '未绑定'
-      return this.userInfo.mobile.slice(0, 6) + 'XXXXX'
-    }
+    })
+    
+  },
+
+  computed: {
+    ...mapState(['userInfo', 'userAuth', 'userState', 'secretMobile']),
+  },
+
+  watch: {
+
   },
 
   components: { 
@@ -100,6 +112,8 @@ export default {
 
 
   methods: {
+    ...mapActions(['login', 'changeUserInfo']),
+
     toPanel(index) {
       if (this.userAuth == 1) {
         this.leftStatus = index
@@ -107,7 +121,6 @@ export default {
     },
 
     authPhone() {
-      this.showPhoneError = false
       this.showModalPhone = true
     },
 
@@ -116,9 +129,32 @@ export default {
     },
 
     submitAuth() {
-      if(this.userInfo == '') {
-        this.showPhoneError = true
+      if(this.userInfo.mobile == '') return
+      var flag = true
+      if (this.inputObjList[0].content == '') {
+        flag = false
+        this.inputObjList[0].dangerText = '请输入姓名'
       }
+      if (this.inputObjList[1].content == '') {
+        flag = false
+        this.inputObjList[1].dangerText = '请输入单位'
+      }
+      if (this.inputObjList[2].content == '') {
+        flag = false
+        this.inputObjList[2].dangerText = '请输入职务'
+      }
+      if (flag === false) return
+
+      this.changeUserInfo(
+        this.inputObjList[0].content, 
+        this.inputObjList[1].content, 
+        this.inputObjList[2].content, 
+        this.inputObjList[3].content
+      ).then(() => { // 成功
+        this.leftStatus = 2
+      }).catch(() => { // 失败
+
+      })
     }
   }
   

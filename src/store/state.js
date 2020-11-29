@@ -17,4 +17,5 @@ export default {
   },
   userState: 0,
   userAuth: 0,
+  secretMobile: '未绑定',
 }

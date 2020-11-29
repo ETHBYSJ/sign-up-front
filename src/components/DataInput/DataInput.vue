@@ -4,7 +4,10 @@
       <span>{{inputObj.name}}</span>
       <span class="data_input_star" v-if="inputObj.star&&inputObj.name.length>0">*</span>
     </div>
-    <input :placeholder="inputObj.placeholder"  v-model="inputObj.content">
+    <div class="input_wapper">
+      <!--span class="test">{{inputObj.name}} &nbsp;</span-->
+      <input :placeholder="inputObj.placeholder" v-model="inputObj.content">
+    </div>
     <div class="data_input_danger">
       <span class="danger_text">{{inputObj.dangerText}}</span>
     </div>

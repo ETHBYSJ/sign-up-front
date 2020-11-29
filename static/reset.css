@@ -88,8 +88,3 @@ article,aside,blockquote,body,button,code,dd,details,div,dl,dt,fieldset,figcapti
   -moz-box-sizing:border-box;
   box-sizing:border-box
 }
-
-/* 解决element-ui 顶部提示框font图标过大（依赖全局fontsize 192px) 
-i {
-  font-size: 25px;
-}*/

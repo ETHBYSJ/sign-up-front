@@ -18,7 +18,7 @@
             <div class="code_btn" :class="{active: codeActive&&timeActive}" @click="getCode">{{codeText}}</div>
           </div>
           <div class="modal_phone_bot_bot">
-            <div class="send_btn" @click="bindPhone">绑定手机号</div>
+            <div class="send_btn" :class="{active: bindActive}" @click="bindPhone">绑定手机号</div>
           </div>
         </div>
       </div>
@@ -27,9 +27,11 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import DataInput from '../DataInput/DataInput.vue'
 import { DataInputConfig } from '../../common/javascript/model/data-input-config'
 import { isMobile } from '../../utils/util.js'
+import { reqSendCode, reqCheckCode } from '../../api/request.js'
 
 export default {
   data() {
@@ -37,15 +39,20 @@ export default {
       timing: null, // 定时器
       codeActive: false, // 记录手机号合法情况
       timeActive: true,  // 记录定时器情况
-      sendActive: true,
+      bindActive: false,
       codeText: '获取验证码',
       phoneObj: new DataInputConfig('手机号', true, '', '请输入手机号', ''),
       codeObj: new DataInputConfig('', true, '', '验证码', ''),
+      sendID: '',
     }
   },
   
   components: { 
     DataInput 
+  },
+
+  computed: {
+    ...mapState(['userInfo'])
   },
 
   watch: {
@@ -55,6 +62,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(['bindMobile']),
     /**
      * 获取验证码
      */
@@ -63,9 +71,18 @@ export default {
       if(this.codeActice === false || this.timeActive === false)
         return
       
-      // 判断xxx 假设通过
-      // this.sendActive = true
-      this.countSecond()
+      // 清空错误信息
+      this.phoneObj.dangerText = ''
+      this.codeObj.dangerText = ''
+
+      // 发送请求--异步
+      reqSendCode({mobile: this.phoneObj.content}).then((res) => {
+        this.sendID = res.data.data.id
+        this.countSecond()
+        this.bindActive = true
+      }).catch((err) => {
+        this.phoneObj.dangerText = '该号码发送数量过多，请稍后再试'
+      })
     },
 
     /**
@@ -74,7 +91,7 @@ export default {
     countSecond() {
       let number = 60
       this.codeText = number + "s"
-      this.sendActive = false
+      this.timeActive = false
       this.timing = setInterval(() => {
         number--;
         this.codeText = number + "s";
@@ -82,7 +99,7 @@ export default {
           clearInterval(this.timing);
           this.timing = null;
           this.codeText = "获取验证码";
-          this.sendActive = true
+          this.timeActive = true
         }
       }, 1000);
     },
@@ -91,7 +108,24 @@ export default {
      * 绑定手机号
      */
     bindPhone() {
+      if (this.bindActive === false) return
 
+      var data = {
+        id: this.sendID,
+        mobile: this.phoneObj.content,
+        code: this.codeObj.content,
+      }
+      reqCheckCode(data).then((res) => {
+        if (res.data.key == 'SuccessKey') {
+          this.bindMobile(data.mobile)
+          this.$parent.closeModalPhone()
+        }
+        else {
+          this.codeObj.dangerText = res.data.message
+        }
+      }).catch((err) => {
+        this.codeObj.dangerText = err.response.data.message
+      })
     }
   },
 }

@@ -70,19 +70,24 @@
               height: 100px
               padding 40px 0 30px
               .index_right_next_btn
-                background-color: #064b80
+                color: rgba(0, 0, 0, 0.26)
+                background-color: rgba(0, 0, 0, 0.12);
                 height 35px
                 width 80px
                 line-height: 35px
                 font-size 13px
                 border-radius: 4px
                 text-align: center
-                color white
                 margin 0 auto
                 box-shadow: 1px 1px 3px 0px #cccccc
-                cursor pointer
-                &:hover
-                  opacity: 0.8
+                cursor not-allowed
+                font-weight: bold
+                &.active
+                  background-color #064b80
+                  cursor pointer
+                  color white
+                  &:hover
+                    opacity: 0.8
           .index_right_login2
             height: 100%
             .index_right_title

@@ -6,6 +6,7 @@
     .nav_wapper
       margin 0 auto
       overflow: auto
+      width 900px
       .logo_img
         margin-left 14px
         height 44px
@@ -19,40 +20,42 @@
         float left
         @media screen and (max-width 1000px)
           font-size 22px
-      .login_btn
-        margin-right 14px
-        float right
-        background-color: white
-        color: #064b80
-        height 36px
-        width 60px
-        position: relative
-        top 14px
-        border-radius: 6px
-        line-height: 36px
-        text-align: center
-        font-size: 17px
-        letter-spacing: 1px
-        font-weight: bold
-        cursor pointer
-        &:hover
-          opacity: 0.8
-      .login_name
-        margin-right 14px
-        width 80px
-        float left
-        font-size: 17px
-        font-weight: bold
-        color white
-        text-align: center
-        float right
-        cursor pointer
-       .user_img 
-          height 20px
-          width 20px
-          margin-right: 4px
-          position relative
-          top -1px
+    .login_btn
+      position: absolute
+      right 14px
+      top 0
+      background-color: white
+      color: #064b80
+      height 36px
+      width 60px
+      position: relative
+      top 14px
+      border-radius: 6px
+      line-height: 36px
+      text-align: center
+      font-size: 17px
+      letter-spacing: 1px
+      font-weight: bold
+      cursor pointer
+      &:hover
+        opacity: 0.8
+    .login_name
+      position: absolute
+      right 14px 
+      top 0
+      width 80px
+      font-size: 17px
+      font-weight: bold
+      color white
+      text-align: center
+      float right
+      cursor pointer
+      .user_img 
+        height 20px
+        width 20px
+        margin-right: 4px
+        position relative
+        top -1px
         &:hover
           opacity: 0.8
         
