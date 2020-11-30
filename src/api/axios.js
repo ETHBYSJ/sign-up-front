@@ -3,7 +3,7 @@ import axios from 'axios'
 axios.defaults.withCredentials = true
 
 const instance = axios.create({
-  baseURL: 'iadmin',
+  baseURL: '',
   timeout: 30000
 })
 

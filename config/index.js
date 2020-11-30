@@ -16,6 +16,11 @@ module.exports = {
         onProxyReq(proxyReq, req, res) {
           proxyReq.setHeader('Cookie', 'iadmin=0323fa6a-da19-41be-a50b-a05edeb27997')
         }
+      },
+      "/api/v1": {
+        target: 'http://192.168.1.119:8888',
+        // target: '202.120.39.3',
+        changeOrigin: true
       }
     },
 

@@ -1,0 +1,24 @@
+.pages_main
+  height 465px
+  display: flex
+  align-items: center;   // 垂直居中，针对的是mycontainer类下面的子元素，不包含“孙子”元素
+  justify-content: center; // 水平居中，针对的是mycontainer类下面的子元素，不包含“孙子”元素
+  .pages_lr
+    width 30px
+    img 
+      width 30px
+      &.active_icon
+        cursor pointer
+        &:hover
+          opacity 0.6
+      &.inactive_icon
+        cursor not-allowed
+  .pages_mid
+    flex 1
+    padding 0 14px
+    .pages_number
+      height 15px
+      font-size 13px
+      width 100px
+      text-align: center
+      margin: 0 auto

@@ -33,31 +33,37 @@
 
             <div class="index_right_login2" v-else-if="leftStatus==2">
               <h2 class="index_right_title">名单申报</h2>
-              <div class="index_right_scroll">
-                <vue-scroll>
-                  <declare-inputs class="dec_inputs" v-for="dec in declareList" :key="dec.name.name" :decObj="dec">
-                  </declare-inputs>
-                </vue-scroll>
+              <div class="index_right_content">
+                <!--declare-inputs class="dec_inputs" v-for="dec in declareList" :key="dec.name.name" :decObj="dec">
+                </declare-inputs-->
+                <input-pages
+                :inputList="declareList">
+                </input-pages>
               </div>
+
               <div class="index_right_btn_box"></div>
             </div>
 
             <div class="index_right_login3" v-else-if="leftStatus==3">
               <h2 class="index_right_title">文件上传</h2>
               <div class="sample_file_wapper">
-                <div class="sample_file_title">示例文件：</div>
-                <div class="sample_file_name">{{sampleFileName}}</div>
+                <a class="sample_file_title">示例文件:</a>
+                <a class="sample_file_name" @click="downloadSampleFile">{{sampleFileName}}</a>
                 <div class="sample_file_intro">
                   <p>请下载审批参会材料范本，按实际情况填写后并上传</p>
-                  <br>
-                  <p>材料一经上传后不可更改，请谨慎填写！</p>
                 </div>
               </div>
               <div class="upload_file_wapper">
-                <div class="upload_file_title">资料文件：</div>
-                <div class="upload_file_btn"></div>
-                <div class="upload_file_intro">
-                  请选择文件上传当地主管部门审批参会材料！
+                <a class="upload_file_title">资料文件:</a>
+                <div class="upload_file_right">
+                  <el-upload class="file_uploader"
+                    :action="uploadUrl"
+                    :limit="1">
+                    <a class="upload_file_btn">{{uploadStatus}}</a>
+                  </el-upload>
+                  <div class="upload_file_intro">
+                    请选择文件上传当地主管部门审批参会材料！
+                  </div>
                 </div>
               </div>
             </div>
@@ -80,12 +86,13 @@ import DataInput from '../components/DataInput/DataInput.vue'
 import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 import ModalPhone from '../components/ModalPhone/ModalPhone.vue'
 import DeclareInputs from '../components/DeclareInputs/DeclareInputs.vue'
-import { reqSendCode, reqCheckCode, reqGetUserInfo, reqChangeUserInfo } from '../api/request'
+import InputPages from '../components/InputPages/InputPages.vue'
+import { reqGetUserInfo, reqChangeUserInfo, reqDownloadSampleFile, reqGetUserFile } from '../api/request'
 
 export default {
   data() {
     return {
-      leftStatus: 1,
+      leftStatus: 2,
       showModalPhone: false,
       inputObjList: [
         new DataInputConfig('姓名', true, '', '', ''),
@@ -95,8 +102,11 @@ export default {
       ],       
       declareList: [
         new DeclareMsg(),
+        new DeclareMsg(),
       ],
-      sampleFileName: '审批参会材料范本.doc'
+      sampleFileName: '审批参会材料范本.doc',
+      uploadUrl: '',
+      uploadStatus: '选择上传',
     }
   },
 
@@ -105,6 +115,13 @@ export default {
     reqGetUserInfo().then(res => {
       this.login(res.data.data)
     }).catch(err => {})   
+
+    // 获取上传文件
+    reqGetUserFile(this.userInfo.id).then(res => {
+      if (res.data.data.length > 0) {
+        this.uploadStatus = '重新上传'
+      }
+    })
   },
 
   computed: {
@@ -112,6 +129,10 @@ export default {
   },
 
   watch: {
+    'userInfo.id': function(val) {
+      this.uploadUrl = 'api/v1/file/upload?id=' + val
+    },
+
     'userInfo.name': function(val) {
       this.inputObjList[0].content = val
     },
@@ -141,7 +162,8 @@ export default {
     HeadNavigation,
     DataInput,
     ModalPhone,
-    DeclareInputs
+    DeclareInputs,
+    InputPages
   },
 
 
@@ -160,6 +182,10 @@ export default {
 
     closeModalPhone() {
       this.showModalPhone = false
+    },
+
+    downloadSampleFile() {
+      reqDownloadSampleFile()
     },
 
     submitAuth() {
