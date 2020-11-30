@@ -54,15 +54,21 @@
               <div class="upload_file_wapper">
                 <a class="upload_file_title">资料文件:</a>
                 <div class="upload_file_right">
-                  <el-upload class="file_uploader"
+                  <!--el-upload class="file_uploader"
                     :action="uploadUrl"
                     :limit="1">
                     <a class="upload_file_btn">{{uploadStatus}}</a>
-                  </el-upload>
+                  </el-upload-->
+                  <a class="upload_file_btn" @click="choiceFile">{{uploadStatus}}</a>
+                  <div class="upload_file_name">{{uploadName}}</div>
+                  <input ref="filElem" type="file" class="upload-file" @change="getFile($event)">
                   <div class="upload_file_intro">
                     请选择文件上传当地主管部门审批参会材料！
                   </div>
                 </div>
+              </div>
+              <div class="index_right_btn_box">
+                <div class="index_right_btn" @click="updateEnrollList">提交资料</div>
               </div>
             </div>
           </div>
@@ -90,7 +96,7 @@ import { reqGetUserInfo, reqChangeUserInfo, reqDownloadSampleFile, reqGetUserFil
 export default {
   data() {
     return {
-      leftStatus: 2,
+      leftStatus: 3,
       showModalPhone: false,
       inputObjList: [
         new DataInputConfig('姓名', true, '', '', ''),
@@ -104,6 +110,7 @@ export default {
       sampleFileName: '审批参会材料范本.doc',
       uploadUrl: '',
       uploadStatus: '选择上传',
+      uploadName: '未选择文件',
     }
   },
 
@@ -117,6 +124,7 @@ export default {
     reqGetUserFile(this.userInfo.id).then(res => {
       if (res.data.data.length > 0) {
         this.uploadStatus = '重新上传'
+        this.uploadName = res.data.data
       }
     })
   },
@@ -222,6 +230,42 @@ export default {
 
     updateEnrollList() {
       //
+    },
+
+    choiceFile() {
+      this.$refs.filElem.dispatchEvent(new MouseEvent('click'))
+    },
+
+    getFile(event) {
+      // load文件名
+      if (event.target.files.length == 0) {
+        this.uploadName = '未选择文件'
+        return
+      }
+      else {
+        this.uploadName = event.target.files[0].name
+      }
+      //document.getElementById('file_name').innerText=this.value
+      /*var that = this;
+      const inputFile = this.$refs.filElem.files[0];
+      if(inputFile) {
+        //if(inputFile.type !== 'image/jpeg' && inputFile.type !== 'image/png' && inputFile.type !== 'image/gif'){
+        //  alert('不是有效的图片文件！');
+        //  return;
+        //}
+        this.imgInfo = Object.assign({}, this.imgInfo, {
+            name: inputFile.name,
+            size: inputFile.size,
+            lastModifiedDate: inputFile.lastModifiedDate.toLocaleString()
+        })
+        const reader = new FileReader();
+        reader.readAsDataURL(inputFile);
+        reader.onload = function (e) {
+            that.imgSrc = this.result;
+        }
+      } else {
+        return;
+      }*/
     }
   }
   

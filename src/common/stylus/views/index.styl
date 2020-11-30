@@ -97,12 +97,6 @@
               border-bottom: 1px solid #e8e8e8
             .index_right_content
               padding 14px 100px
-              .el-table
-                background-color: transparent !important
-                .el-table__header-wapper
-                  display none
-              .pagination_box
-                text-align: center
             .index_right_btn_box
               height 35px
               .index_right_btn
@@ -152,16 +146,40 @@
                 width: 300px
                 margin-left 4px
                 float left
-                .file_uploader
-                  .upload_file_btn
-                    display inline-block
-                    font-size 14px
-                    font-weight: bold
-                    color purple
-                    border-radius: 4px
-                    border 1px solid purple
-                    height 30px
-                    width: 80px
-                    text-align: center
+                .upload-file
+                  display none
+                .upload_file_name
+                  font-size 14px
+                  display inline-block
+                  font-weight: normal
+                  margin-left 4px
+                .upload_file_btn
+                  display inline-block
+                  font-size 14px
+                  font-weight: bold
+                  color purple
+                  border-radius: 4px
+                  border 1px solid purple
+                  height 30px
+                  width: 80px
+                  text-align: center
+                  cursor pointer
                 .upload_file_intro
                   font-size 15px
+            .index_right_btn_box
+              height 35px
+              .index_right_btn
+                height 35px
+                width 80px
+                line-height: 35px
+                font-size 13px
+                border-radius: 4px
+                text-align: center
+                margin 0 auto
+                box-shadow: 1px 1px 3px 0px #cccccc
+                font-weight: bold
+                background-color #064b80
+                cursor pointer
+                color white
+                &:hover
+                  opacity: 0.8
