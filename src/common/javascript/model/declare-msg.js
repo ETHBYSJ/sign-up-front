@@ -1,7 +1,9 @@
 import { DataInputConfig } from './data-input-config.js'
+import { v4 as uuidv4 } from 'uuid'
 
 export class DeclareMsg {
   constructor() {
+    this.id = uuidv4()
     this.name = new DataInputConfig('姓名', true, '', '', '')
     this.number = new DataInputConfig('身份证号码', true, '', '', '')
     this.department = new DataInputConfig('工作单位', true, '', '', '')

@@ -16,9 +16,22 @@
   .pages_mid
     flex 1
     padding 0 14px
-    .pages_number
-      height 15px
-      font-size 13px
-      width 100px
-      text-align: center
-      margin: 0 auto
+    .pages_mid_bot
+      padding 0 14px
+      display: flex
+      line-height: 30px
+      font-size 14px
+      .pages_btn
+        height 30px
+        width 75px
+        color #c1c1c1
+        cursor not-allowed
+        &.active
+          cursor pointer
+          color #000
+          &:hover
+            color blue
+      .pages_number
+        flex 1
+        text-align: center
+      

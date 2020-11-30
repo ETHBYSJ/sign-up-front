@@ -34,14 +34,12 @@
             <div class="index_right_login2" v-else-if="leftStatus==2">
               <h2 class="index_right_title">名单申报</h2>
               <div class="index_right_content">
-                <!--declare-inputs class="dec_inputs" v-for="dec in declareList" :key="dec.name.name" :decObj="dec">
-                </declare-inputs-->
-                <input-pages
-                :inputList="declareList">
-                </input-pages>
+                <input-pages :inputList="declareList"></input-pages>
               </div>
 
-              <div class="index_right_btn_box"></div>
+              <div class="index_right_btn_box">
+                <div class="index_right_btn" @click="updateEnrollList">下一步</div>
+              </div>
             </div>
 
             <div class="index_right_login3" v-else-if="leftStatus==3">
@@ -101,7 +99,6 @@ export default {
         new DataInputConfig('邮箱', false, '', '', ''),
       ],       
       declareList: [
-        new DeclareMsg(),
         new DeclareMsg(),
       ],
       sampleFileName: '审批参会材料范本.doc',
@@ -221,6 +218,10 @@ export default {
         this.inputObjList[2].dangerText = '请输入职务'
       }
       return flag
+    },
+
+    updateEnrollList() {
+      //
     }
   }
   
