@@ -5,9 +5,9 @@
       <div class="index_wapper clearfix">
         <div class="index_left_wapper">
           <ul class="index_left_panel">
-            <li class="index_left_option" :class="[{inactive: userState==0}, {active: userState==1&&leftStatus==1}]" @click="leftStatus=1">身份验证</li>
-            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==2}]" @click="toPanel(2)">名单申报</li>
-            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==3}]" @click="toPanel(3)">资料上传</li>
+            <li class="index_left_option" :class="[{inactive: userState==0}, {active: userState==1&&leftStatus==1}]" @click="toFirst">身份验证</li>
+            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==2}]" @click="toSecond">名单申报</li>
+            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==3}]" @click="toThird">资料上传</li>
           </ul>
         </div>
 
@@ -60,15 +60,15 @@
                     <a class="upload_file_btn">{{uploadStatus}}</a>
                   </el-upload-->
                   <a class="upload_file_btn" @click="choiceFile">{{uploadStatus}}</a>
-                  <div class="upload_file_name">{{uploadName}}</div>
-                  <input ref="filElem" type="file" class="upload-file" @change="getFile($event)">
+                  <div class="upload_file_name" :class="{uploading: uploadActive}">{{uploadName}}</div>
+                  <input ref="filElem" type="file" class="file" id="file" @change="getFile($event)">
                   <div class="upload_file_intro">
                     请选择文件上传当地主管部门审批参会材料！
                   </div>
                 </div>
               </div>
               <div class="index_right_btn_box">
-                <div class="index_right_btn" @click="updateEnrollList">提交资料</div>
+                <div class="index_right_btn" :class="{active: uploadActive}" @click="uploadFile">提交资料</div>
               </div>
             </div>
           </div>
@@ -91,12 +91,12 @@ import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 import ModalPhone from '../components/ModalPhone/ModalPhone.vue'
 import DeclareInputs from '../components/DeclareInputs/DeclareInputs.vue'
 import InputPages from '../components/InputPages/InputPages.vue'
-import { reqGetUserInfo, reqChangeUserInfo, reqDownloadSampleFile, reqGetUserFile } from '../api/request'
+import { reqGetUserInfo, reqChangeUserInfo, reqDownloadSampleFile, reqGetUserFile, reqUploadFile, reqGetUserList, reqUpdateUserList } from '../api/request'
 
 export default {
   data() {
     return {
-      leftStatus: 3,
+      leftStatus: 1,
       showModalPhone: false,
       inputObjList: [
         new DataInputConfig('姓名', true, '', '', ''),
@@ -110,23 +110,15 @@ export default {
       sampleFileName: '审批参会材料范本.doc',
       uploadUrl: '',
       uploadStatus: '选择上传',
-      uploadName: '未选择文件',
+      uploadFileObj: {}, 
+      uploadName: '未上传文件',
+      uploadActive: true
     }
   },
 
   mounted() {
-    // 获取登录信息
-    reqGetUserInfo().then(res => {
-      this.login(res.data.data)
-    }).catch(err => {})   
+    this.toFirst()
 
-    // 获取上传文件
-    reqGetUserFile(this.userInfo.id).then(res => {
-      if (res.data.data.length > 0) {
-        this.uploadStatus = '重新上传'
-        this.uploadName = res.data.data
-      }
-    })
   },
 
   computed: {
@@ -156,9 +148,9 @@ export default {
 
     'userAuth': function(val) {
       if (val === 1) {
-        this.leftStatus = 2
+        this.toSecond()
       } else {
-        this.leftStatus = 1
+        this.toFirst()
       }
     }
   },
@@ -175,9 +167,38 @@ export default {
   methods: {
     ...mapActions(['login', 'changeUserInfo']),
 
-    toPanel(index) {
+    toFirst() {
+      // 获取登录信息
+      this.leftStatus = 1
+      reqGetUserInfo().then(res => {
+        this.login(res.data.data)
+      }).catch(err => {})   
+    },
+
+    toSecond() {
       if (this.userAuth == 1) {
-        this.leftStatus = index
+        // 获取报名表
+        this.leftStatus = 2
+        reqGetUserList(this.userInfo.id).then(res => {
+          if (res.data.data.length > 0) {
+            this.loadEnrollList(res.data.data)
+          }
+        })
+      }
+    },
+
+    toThird() {
+      if (this.userAuth == 1) {
+        // 获取上传文件
+        this.leftStatus = 3
+        this.uploadActive = true
+        reqGetUserFile(this.userInfo.id).then(res => {
+          if (res.data.data.length > 0) {
+            this.uploadStatus = '重新上传'
+            this.uploadName = res.data.data
+            this.uploadActive = false
+          }
+        })
       }
     },
 
@@ -189,12 +210,8 @@ export default {
       this.showModalPhone = false
     },
 
-    downloadSampleFile() {
-      reqDownloadSampleFile()
-    },
-
     submitAuth() {
-      if (this.checkAuth !== true) return
+      if (this.checkAuth() !== true) return
 
       const data = {
         name: this.inputObjList[0].content, 
@@ -203,11 +220,8 @@ export default {
         email: this.inputObjList[3].content
       };
       reqChangeUserInfo(data).then(res => {
-        this.leftStatus = 2
-      }).catch(err => {
-
-      })
-
+        this.toSecond()
+      }).catch(err => {})
     },
 
     checkAuth() {
@@ -228,44 +242,70 @@ export default {
       return flag
     },
 
+    loadEnrollList(enrollList) {
+      this.declareList = []
+      for (var p of enrollList) {
+        let msg = new DeclareMsg()
+        msg.name.content = p.name
+        msg.number.content = p.idCard
+        msg.department.content = p.company
+        msg.position.content = p.duty
+        msg.mobile.content = p.phone
+        msg.identity.content = p.identity
+        this.declareList.push(msg)
+      }
+    },
+
     updateEnrollList() {
-      //
+      const data = {
+        id: this.userInfo.id,
+        list: []
+      }
+      for (var p of this.declareList) {
+        let msg = {
+          name: p.name.content,
+          idCard: p.number.content,
+          company: p.department.content,
+          duty: p.position.content,
+          phone: p.mobile.content,
+          identity: p.identity.content,
+        }
+        data.list.push(msg)
+      }
+      reqUpdateUserList(data).then(res => {
+        if (res.data.code === 10000) {
+          this.toThird()
+        }
+      })
     },
 
     choiceFile() {
       this.$refs.filElem.dispatchEvent(new MouseEvent('click'))
     },
 
+    downloadSampleFile() {
+      reqDownloadSampleFile()
+    },
+
     getFile(event) {
-      // load文件名
-      if (event.target.files.length == 0) {
-        this.uploadName = '未选择文件'
-        return
+      // load文件
+      if (event.target.files.length != 0) {
+        this.uploadFileObj = event.target.files[0]
+        this.uploadName = this.uploadFileObj.name
+        this.uploadActive = true
       }
-      else {
-        this.uploadName = event.target.files[0].name
-      }
-      //document.getElementById('file_name').innerText=this.value
-      /*var that = this;
-      const inputFile = this.$refs.filElem.files[0];
-      if(inputFile) {
-        //if(inputFile.type !== 'image/jpeg' && inputFile.type !== 'image/png' && inputFile.type !== 'image/gif'){
-        //  alert('不是有效的图片文件！');
-        //  return;
-        //}
-        this.imgInfo = Object.assign({}, this.imgInfo, {
-            name: inputFile.name,
-            size: inputFile.size,
-            lastModifiedDate: inputFile.lastModifiedDate.toLocaleString()
-        })
-        const reader = new FileReader();
-        reader.readAsDataURL(inputFile);
-        reader.onload = function (e) {
-            that.imgSrc = this.result;
-        }
-      } else {
-        return;
-      }*/
+    },
+
+    uploadFile() {
+      if (this.uploadActive === true && this.uploadFileObj != {}) {
+        let formData = new FormData()
+        formData.append('file', this.uploadFileObj)
+        reqUploadFile(this.userInfo.id, formData).then(res => {
+          if (res.data.code === 10000) {
+            this.toThird()
+          }
+        }).catch({})
+      }  
     }
   }
   

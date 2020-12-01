@@ -146,13 +146,15 @@
                 width: 300px
                 margin-left 4px
                 float left
-                .upload-file
+                .file
                   display none
                 .upload_file_name
                   font-size 14px
                   display inline-block
                   font-weight: normal
                   margin-left 4px
+                  &.uploading
+                    color red
                 .upload_file_btn
                   display inline-block
                   font-size 14px
@@ -169,6 +171,8 @@
             .index_right_btn_box
               height 35px
               .index_right_btn
+                color: rgba(0, 0, 0, 0.26)
+                background-color: rgba(0, 0, 0, 0.12);
                 height 35px
                 width 80px
                 line-height: 35px
@@ -177,9 +181,11 @@
                 text-align: center
                 margin 0 auto
                 box-shadow: 1px 1px 3px 0px #cccccc
+                cursor not-allowed
                 font-weight: bold
-                background-color #064b80
-                cursor pointer
-                color white
-                &:hover
-                  opacity: 0.8
+                &.active
+                  background-color #064b80
+                  cursor pointer
+                  color white
+                  &:hover
+                    opacity: 0.8

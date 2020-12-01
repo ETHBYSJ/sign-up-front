@@ -115,9 +115,10 @@ export default {
         mobile: this.phoneObj.content,
         code: this.codeObj.content,
       }
+      //var that = this
       reqCheckCode(data).then((res) => {
-        if (res.data.key == 'SuccessKey') {
-          this.bindMobile(data.mobile)
+        if (res.data.data != "") {
+          this.bindMobile(res.data.data.mobile)
           this.$parent.closeModalPhone()
         }
         else {

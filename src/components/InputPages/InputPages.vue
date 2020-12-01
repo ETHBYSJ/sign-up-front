@@ -65,6 +65,7 @@ export default {
       // 第一页不能删除
       if (this.currPage != 0) {
         this.inputList.splice(this.currPage, 1)
+        this.currPage -= 1
       }
     }
   }
