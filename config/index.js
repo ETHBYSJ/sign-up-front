@@ -14,7 +14,7 @@ module.exports = {
         target: 'https://asc.shusim.com',
         changeOrigin: true,
         onProxyReq(proxyReq, req, res) {
-          proxyReq.setHeader('Cookie', 'iadmin=0323fa6a-da19-41be-a50b-a05edeb27997')
+          //proxyReq.setHeader('Cookie', 'iadmin=0323fa6a-da19-41be-a50b-a05edeb27997')
         }
       },
       "/api/v1": {

@@ -15,6 +15,8 @@ export const reqDownloadSampleFile = () => {
   })
 }
 
+export const reqSetCookie = () => get('/api/v1/cookie')
+
 export const reqUploadFile = (id, data) => post('/api/v1/file/upload?id='+id, data, {type: 'file', 'Content-Type': 'application/x-www-form-urlencoded'})
 
 export const reqGetUserFile = (id) => get('/api/v1/file/name?id='+id)

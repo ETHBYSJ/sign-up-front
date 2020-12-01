@@ -91,7 +91,16 @@ import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 import ModalPhone from '../components/ModalPhone/ModalPhone.vue'
 import DeclareInputs from '../components/DeclareInputs/DeclareInputs.vue'
 import InputPages from '../components/InputPages/InputPages.vue'
-import { reqGetUserInfo, reqChangeUserInfo, reqDownloadSampleFile, reqGetUserFile, reqUploadFile, reqGetUserList, reqUpdateUserList } from '../api/request'
+import { 
+  reqGetUserInfo, 
+  reqChangeUserInfo, 
+  reqDownloadSampleFile, 
+  reqGetUserFile, 
+  reqUploadFile, 
+  reqGetUserList, 
+  reqUpdateUserList, 
+  reqSetCookie 
+} from '../api/request'
 
 export default {
   data() {
@@ -117,8 +126,9 @@ export default {
   },
 
   mounted() {
-    this.toFirst()
-
+    reqSetCookie().then(res => {
+      this.toFirst()
+    }).catch({})
   },
 
   computed: {
