@@ -8,12 +8,21 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: () => import('../views/index.vue')
+      redirect: '/not-logged',
+    },
+    {
+      path: '/home',
+      component: () => import('../views/home.vue')
     },
     {
       path: '/mine',
       component: () => import('../views/mine.vue')
+    },
+    {
+      path: '/not-logged',
+      component: () => import('../views/not-logged.vue')
     }
+
   ]
 })
 

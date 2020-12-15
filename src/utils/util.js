@@ -37,3 +37,13 @@ export function convertRes2Blob(response) {
     window.URL.revokeObjectURL(blobURL)
   }
 }
+
+export function formatDate(timestamp) {
+  var date = new Date(Number(timestamp))
+  var YY = date.getFullYear() + '-'
+  var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+  var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+  var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+  return YY + MM + DD + hh + mm
+}

@@ -195,29 +195,37 @@ export default {
   },
 
   mounted() {
-    reqSetCookie().then(res => {
-      // 获取报名信息
-      reqGetUserList(this.userInfo.id).then(res => {
-        // 报名过
-        if (res.data.data.length > 0) {
-          this.loadEnrollList(res.data.data)
-        }
-      })
-      this.toFirst()
-    }).catch({})
+    // load 基本信息
+    this.loadUserInfo()
 
-    
+    // 获取报名信息
+    reqGetUserList(this.userInfo.id).then(res => {
+      // 报名过
+      if (res.data.data.length > 0) {
+        this.loadEnrollList(res.data.data)
+      }
+    })
+    this.toFirst()
   },
 
   methods: {
     ...mapActions(['login', 'changeUserInfo']),
 
+    loadUserInfo(data) {
+      this.uploadUrl = 'api/v1/file/upload?id=' + this.userInfo.id
+      this.inputObjList[0].content = this.userInfo.name
+      this.inputObjList[1].content = this.userInfo.department
+      this.inputObjList[2].content = this.userInfo.position
+      this.inputObjList[3].content = this.userInfo.email
+      try {
+        this.areaObj.content = JSON.parse(this.userInfo.extra).area
+      } catch (err) {
+        this.areaObj.content = ''
+      }
+    },
+
     toFirst() {
-      // 获取登录信息
       this.leftStatus = 1
-      reqGetUserInfo().then(res => {
-        this.login(res.data.data)
-      }).catch(err => {})   
     },
 
     toSecond() {

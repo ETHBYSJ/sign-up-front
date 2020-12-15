@@ -24,3 +24,5 @@ export const reqGetUserFile = (id) => get('/api/v1/file/name?id='+id)
 export const reqGetUserList = (id) => get('/api/v1/user/participants?id='+id)
 
 export const reqUpdateUserList = (data) => post('/api/v1/user/signUp', data)
+
+export const reqCheckEnrollRecord = (id) => get('/api/v1/user/check?id='+id)
