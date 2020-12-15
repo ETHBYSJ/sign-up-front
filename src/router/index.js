@@ -9,6 +9,10 @@ const router = new Router({
     {
       path: '/',
       component: () => import('../views/index.vue')
+    },
+    {
+      path: '/mine',
+      component: () => import('../views/mine.vue')
     }
   ]
 })

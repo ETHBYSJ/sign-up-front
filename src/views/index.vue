@@ -21,24 +21,33 @@
                 <div class="index_right_btn" @click="authPhone">验证</div>
               </div>
               <div class="index_right_inputs">
-                <data-input class="index_right_input" v-for="inputObj in inputObjList" 
+                <data-input 
+                  class="index_right_input" 
+                  v-for="inputObj in inputObjList" 
                   :key="inputObj.name"
                   :inputObj="inputObj">
                 </data-input>
+
+                <data-select :selectObj="areaObj"></data-select>
               </div>
+
               <div class="index_right_next_box">
-                <div class="index_right_next_btn" :class="{active: userInfo.mobile.length === 11}" @click="submitAuth">下一步</div>
+                <div class="index_right_next_btn" 
+                  :class="{active: userInfo.mobile.length === 11}" 
+                  @click="submitAuth">
+                  下一步
+                </div>
               </div>
             </div>
 
             <div class="index_right_login2" v-else-if="leftStatus==2">
               <h2 class="index_right_title">名单申报</h2>
               <div class="index_right_content">
-                <input-pages :inputList="declareList"></input-pages>
+                <input-pages ref="enroll_pages" :inputList="declareList"></input-pages>
               </div>
 
               <div class="index_right_btn_box">
-                <div class="index_right_btn" @click="updateEnrollList">下一步</div>
+                <div class="index_right_btn" @click="nextToThird">下一步</div>
               </div>
             </div>
 
@@ -54,13 +63,8 @@
               <div class="upload_file_wapper">
                 <a class="upload_file_title">资料文件:</a>
                 <div class="upload_file_right">
-                  <!--el-upload class="file_uploader"
-                    :action="uploadUrl"
-                    :limit="1">
-                    <a class="upload_file_btn">{{uploadStatus}}</a>
-                  </el-upload-->
                   <a class="upload_file_btn" @click="choiceFile">{{uploadStatus}}</a>
-                  <div class="upload_file_name" :class="{uploading: uploadActive}">{{uploadName}}</div>
+                  <div class="upload_file_name">{{uploadName}}</div>
                   <input ref="filElem" type="file" class="file" id="file" @change="getFile($event)">
                   <div class="upload_file_intro">
                     请选择文件上传当地主管部门审批参会材料！
@@ -68,7 +72,7 @@
                 </div>
               </div>
               <div class="index_right_btn_box">
-                <div class="index_right_btn" :class="{active: uploadActive}" @click="uploadFile">提交资料</div>
+                <div class="index_right_btn" :class="{active: uploadActive}" @click="updateEnrollList">提交资料</div>
               </div>
             </div>
           </div>
@@ -85,8 +89,10 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { DataInputConfig } from '../common/javascript/model/data-input-config.js'
+import { DataSelectConfig } from '../common/javascript/model/data-select-config.js'
 import { DeclareMsg } from '../common/javascript/model/declare-msg.js'
 import DataInput from '../components/DataInput/DataInput.vue'
+import DataSelect from '../components/DataInput/DataSelect.vue'
 import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 import ModalPhone from '../components/ModalPhone/ModalPhone.vue'
 import DeclareInputs from '../components/DeclareInputs/DeclareInputs.vue'
@@ -108,27 +114,30 @@ export default {
       leftStatus: 1,
       showModalPhone: false,
       inputObjList: [
-        new DataInputConfig('姓名', true, '', '', ''),
-        new DataInputConfig('单位', true, '', '', ''),
-        new DataInputConfig('职务', true, '', '', ''),
-        new DataInputConfig('邮箱', false, '', '', ''),
-      ],       
+        new DataInputConfig('姓名', true, '', '请输入姓名', ''),
+        new DataInputConfig('单位', true, '', '请输入单位', ''),
+        new DataInputConfig('职务', true, '', '请输入职务', ''),
+        new DataInputConfig('邮箱', false, '', '请输入邮箱', ''),
+      ], 
       declareList: [
         new DeclareMsg(),
       ],
+      areaObj: new DataSelectConfig('地区', true, '', '请输入地区', '', [
+        '上海市闵行区',
+        '江苏省南京市',
+        '江苏省苏州市',
+        '浙江省宁波市',
+        '浙江省台州市',
+        '安徽省合肥市',
+        '安徽省安庆市',
+      ]),
       sampleFileName: '审批参会材料范本.doc',
       uploadUrl: '',
       uploadStatus: '选择上传',
       uploadFileObj: {}, 
       uploadName: '未上传文件',
-      uploadActive: true
+      uploadActive: true,
     }
-  },
-
-  mounted() {
-    reqSetCookie().then(res => {
-      this.toFirst()
-    }).catch({})
   },
 
   computed: {
@@ -156,6 +165,17 @@ export default {
       this.inputObjList[3].content = val
     },
 
+    'userInfo.extra': function(val) {
+      try {
+        const { area } = JSON.parse(val)
+        if (area) {
+          this.areaObj.content = area
+        }
+      } catch (err) {
+        // pass  
+      }
+    },
+
     'userAuth': function(val) {
       if (val === 1) {
         this.toSecond()
@@ -168,11 +188,26 @@ export default {
   components: { 
     HeadNavigation,
     DataInput,
+    DataSelect,
     ModalPhone,
     DeclareInputs,
     InputPages
   },
 
+  mounted() {
+    reqSetCookie().then(res => {
+      // 获取报名信息
+      reqGetUserList(this.userInfo.id).then(res => {
+        // 报名过
+        if (res.data.data.length > 0) {
+          this.loadEnrollList(res.data.data)
+        }
+      })
+      this.toFirst()
+    }).catch({})
+
+    
+  },
 
   methods: {
     ...mapActions(['login', 'changeUserInfo']),
@@ -187,28 +222,26 @@ export default {
 
     toSecond() {
       if (this.userAuth == 1) {
-        // 获取报名表
         this.leftStatus = 2
-        reqGetUserList(this.userInfo.id).then(res => {
-          if (res.data.data.length > 0) {
-            this.loadEnrollList(res.data.data)
-          }
-        })
       }
     },
 
     toThird() {
       if (this.userAuth == 1) {
-        // 获取上传文件
+        // 获取上传文件名称
         this.leftStatus = 3
-        this.uploadActive = true
         reqGetUserFile(this.userInfo.id).then(res => {
           if (res.data.data.length > 0) {
             this.uploadStatus = '重新上传'
             this.uploadName = res.data.data
-            this.uploadActive = false
           }
         })
+      }
+    },
+
+    nextToThird() {
+      if(this.$refs.enroll_pages.checkCurrPage()) {
+        this.toThird()
       }
     },
 
@@ -222,15 +255,22 @@ export default {
 
     submitAuth() {
       if (this.checkAuth() !== true) return
-
+      // 地区
+      const area = JSON.stringify({
+        area: this.areaObj.content
+      })
+      // 组装data
       const data = {
         name: this.inputObjList[0].content, 
         department: this.inputObjList[1].content, 
         postion: this.inputObjList[2].content, 
-        email: this.inputObjList[3].content
+        email: this.inputObjList[3].content,
+        extra: area,
       };
       reqChangeUserInfo(data).then(res => {
         this.toSecond()
+        // 写进store
+        this.changeUserInfo(data)
       }).catch(err => {})
     },
 
@@ -249,6 +289,10 @@ export default {
         flag = false
         this.inputObjList[2].dangerText = '请输入职务'
       }
+      if (this.areaObj.content == '') {
+        flag = false
+        this.areaObj.dangerText = '请选择地区'
+      }
       return flag
     },
 
@@ -262,6 +306,10 @@ export default {
         msg.position.content = p.duty
         msg.mobile.content = p.phone
         msg.identity.content = p.identity
+        msg.arriveId.content = p.arriveId
+        msg.arriveTime.content = p.arriveTime
+        msg.leaveId.content = p.leaveId
+        msg.leaveTime.content = p.leaveTime
         this.declareList.push(msg)
       }
     },
@@ -279,6 +327,10 @@ export default {
           duty: p.position.content,
           phone: p.mobile.content,
           identity: p.identity.content,
+          arriveId: p.arriveId.content,
+          arriveTime: p.arriveTime.content,
+          leaveId: p.leaveId.content,
+          leaveTime: p.leaveTime,
         }
         data.list.push(msg)
       }
@@ -302,7 +354,7 @@ export default {
       if (event.target.files.length != 0) {
         this.uploadFileObj = event.target.files[0]
         this.uploadName = this.uploadFileObj.name
-        this.uploadActive = true
+        this.uploadFile()
       }
     },
 
@@ -312,7 +364,9 @@ export default {
         formData.append('file', this.uploadFileObj)
         reqUploadFile(this.userInfo.id, formData).then(res => {
           if (res.data.code === 10000) {
-            this.toThird()
+            this.$alert('上传成功！', '文件上传', {
+              confirmButtonText: '确定',
+            });
           }
         }).catch({})
       }  

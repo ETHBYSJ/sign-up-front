@@ -22,7 +22,8 @@ export default {
 
   displayMobile(state) {
     if (state.userInfo.mobile.length === 11) {
-      state.secretMobile = state.userInfo.mobile.slice(0, 6) + 'XXXXX'
+      const { mobile } = state.userInfo
+      state.secretMobile = mobile.slice(0, 3) + '****' + mobile.slice(7, 11)
     }
     else {
       state.secretMobile = '未绑定'

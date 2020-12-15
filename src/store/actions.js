@@ -12,7 +12,7 @@ export default {
     commit('checkAuth')
   },
 
-  changeAuthInfo({commit}, data) {
+  changeUserInfo({commit}, data) {
     commit('change_authInfo', data.name, data.department, data.position, data.email)
     commit('checkAuth')
   }
