@@ -25,7 +25,7 @@ export default {
   mounted() {
     reqGetUserInfo().then(response => {
       this.login(response.data.data).then(_ => {   
-        if (this.$route.path !== '/mine') {
+        if (this.$route.path === '/not-logged') {
           this.$router.push('/mine')
         }
       }).catch(_ => {})
