@@ -9,11 +9,12 @@ export default {
     state.userState = 0
   },
 
-  change_authInfo(state, name, department, position, email) {
-    state.userInfo.name = name
-    state.userInfo.position = position
-    state.userInfo.department = department
-    state.userInfo.email = email
+  'CHANGE_AUTHINFO': function(state, data) {
+    state.userInfo.name = data.name
+    state.userInfo.position = data.position
+    state.userInfo.department = data.department
+    state.userInfo.email = data.email
+    state.userInfo.extra = data.extra
   },
 
   bindMobile(state, mobile) {

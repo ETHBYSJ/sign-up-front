@@ -204,8 +204,8 @@ export default {
       if (res.data.data.length > 0) {
         this.loadEnrollList(res.data.data)
       }
-    })
-    this.toFirst()
+      this.toFirst()
+    }).catch(err => {})
   },
 
   methods: {
@@ -271,33 +271,33 @@ export default {
       const data = {
         name: this.inputObjList[0].content, 
         department: this.inputObjList[1].content, 
-        postion: this.inputObjList[2].content, 
+        position: this.inputObjList[2].content, 
         email: this.inputObjList[3].content,
         extra: area,
       };
       reqChangeUserInfo(data).then(res => {
-        this.toSecond()
         // 写进store
         this.changeUserInfo(data)
+        this.toSecond()
       }).catch(err => {})
     },
 
     checkAuth() {
       if(this.userInfo.mobile == '') return false
       var flag = true
-      if (this.inputObjList[0].content == '') {
+      if (!this.inputObjList[0].content && this.inputObjList[0].content == '') {
         flag = false
         this.inputObjList[0].dangerText = '请输入姓名'
       }
-      if (this.inputObjList[1].content == '') {
+      if (!this.inputObjList[1].content && this.inputObjList[1].content == '') {
         flag = false
         this.inputObjList[1].dangerText = '请输入单位'
       }
-      if (this.inputObjList[2].content == '') {
+      if (!this.inputObjList[2].content && this.inputObjList[2].content == '') {
         flag = false
         this.inputObjList[2].dangerText = '请输入职务'
       }
-      if (this.areaObj.content == '') {
+      if (!this.areaObj.content && this.areaObj.content == '') {
         flag = false
         this.areaObj.dangerText = '请选择地区'
       }
@@ -338,13 +338,13 @@ export default {
           arriveId: p.arriveId.content,
           arriveTime: p.arriveTime.content,
           leaveId: p.leaveId.content,
-          leaveTime: p.leaveTime,
+          leaveTime: p.leaveTime.content,
         }
         data.list.push(msg)
       }
       reqUpdateUserList(data).then(res => {
         if (res.data.code === 10000) {
-          this.toThird()
+          this.$router.push('/mine')
         }
       })
     },

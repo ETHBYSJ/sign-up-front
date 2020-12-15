@@ -39,11 +39,10 @@ export function convertRes2Blob(response) {
 }
 
 export function formatDate(timestamp) {
-  var date = new Date(Number(timestamp))
-  var YY = date.getFullYear() + '-'
-  var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
-  var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+  var date = new Date(Number(timestamp*1000))
+  var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
+  var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日 '
   var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
   var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
-  return YY + MM + DD + hh + mm
+  return MM + DD + hh + mm
 }

@@ -1,9 +1,12 @@
 export default {
   login({commit}, userInfo) {
-    //console.log(res.data.data)
-    commit('save_userInfo', {userInfo})
-    commit('displayMobile')
-    commit('checkAuth')
+    return new Promise(resolve => {
+      commit('save_userInfo', {userInfo})
+      commit('displayMobile')
+      commit('checkAuth')
+      resolve()
+    })
+    
   },
 
   bindMobile({commit}, mobile) {
@@ -13,7 +16,7 @@ export default {
   },
 
   changeUserInfo({commit}, data) {
-    commit('change_authInfo', data.name, data.department, data.position, data.email)
+    commit('CHANGE_AUTHINFO', data)
     commit('checkAuth')
   }
 }
