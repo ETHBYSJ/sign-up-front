@@ -7,7 +7,7 @@
           <ul class="index_left_panel">
             <li class="index_left_option" :class="[{inactive: userState==0}, {active: userState==1&&leftStatus==1}]" @click="toFirst">身份验证</li>
             <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==2}]" @click="toSecond">名单申报</li>
-            <li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==3}]" @click="toThird">资料上传</li>
+            <!--li class="index_left_option" :class="[{inactive: userState==0||userAuth==0}, {active: userAuth==1&&userState==1&&leftStatus==3}]" @click="toThird">资料上传</li-->
           </ul>
         </div>
 
@@ -47,11 +47,11 @@
               </div>
 
               <div class="index_right_btn_box">
-                <div class="index_right_btn" @click="nextToThird">下一步</div>
+                <div class="index_right_btn" @click="updateEnrollList">提交</div>
               </div>
             </div>
 
-            <div class="index_right_login3" v-else-if="leftStatus==3">
+            <!--div class="index_right_login3" v-else-if="leftStatus==3">
               <h2 class="index_right_title">文件上传</h2>
               <div class="sample_file_wapper">
                 <a class="sample_file_title">示例文件:</a>
@@ -74,7 +74,7 @@
               <div class="index_right_btn_box">
                 <div class="index_right_btn" :class="{active: uploadActive}" @click="updateEnrollList">提交资料</div>
               </div>
-            </div>
+            </div-->
           </div>
           <div class="index_right_logout" v-else>未登录，请先登录！</div>
         </div>
@@ -177,14 +177,6 @@ export default {
         // pass  
       }
     },
-
-    'userAuth': function(val) {
-      if (val === 1) {
-        this.toSecond()
-      } else {
-        this.toFirst()
-      }
-    }
   },
 
   components: { 
@@ -207,6 +199,7 @@ export default {
         this.loadEnrollList(res.data.data)
       }
       this.toFirst()
+      this.toSecond() // 如果没权限不会跳转
     }).catch(err => {})
   },
 

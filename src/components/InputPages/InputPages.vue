@@ -78,11 +78,7 @@ export default {
         flag = false
         page.identity.dangerText = '请选择参会身份'
       }
-<<<<<<< HEAD
       /*if (page.arriveId.content == '') {
-=======
-      if (!page.arriveId.content && page.arriveId.content == '') {
->>>>>>> 30b609282ddd160ed86b64f702bca5dbad95b9ac
         flag = false
         page.arriveId.dangerText = '请输入来沪航班/车次号'
       }
