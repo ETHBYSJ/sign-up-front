@@ -27,6 +27,8 @@ export default {
       this.login(response.data.data).then(_ => {   
         if (this.$route.path === '/not-logged') {
           this.$router.push('/mine')
+        } else if (this.$route.path === '/home') {
+          this.$emit('getEnrollList')
         }
       }).catch(_ => {})
     }).catch(_ => {})

@@ -1,7 +1,7 @@
 <template>
   <div class="index_main">
     <div class="index_container">
-      <head-navigation></head-navigation>
+      <head-navigation @getEnrollList="initInfo"></head-navigation>
       <div class="index_wapper clearfix">
         <div class="index_left_wapper">
           <ul class="index_left_panel">
@@ -188,23 +188,23 @@ export default {
     InputPages
   },
 
-  mounted() {
-    // load 基本信息
-    this.loadUserInfo()
-
-    // 获取报名信息
-    reqGetUserList(this.userInfo.id).then(res => {
-      // 报名过
-      if (res.data.data.length > 0) {
-        this.loadEnrollList(res.data.data)
-      }
-      this.toFirst()
-      this.toSecond() // 如果没权限不会跳转
-    }).catch(err => {})
-  },
-
   methods: {
     ...mapActions(['login', 'changeUserInfo']),
+
+    initInfo() {
+        // load 基本信息
+      this.loadUserInfo()
+
+      // 获取报名信息
+      reqGetUserList(this.userInfo.id).then(res => {
+        // 报名过
+        if (res.data.data.length > 0) {
+          this.loadEnrollList(res.data.data)
+        }
+        this.toFirst()
+        this.toSecond() // 如果没权限不会跳转
+      }).catch(err => {})
+    },
 
     loadUserInfo(data) {
       this.uploadUrl = 'api/v1/file/upload?id=' + this.userInfo.id
@@ -318,6 +318,9 @@ export default {
     },
 
     updateEnrollList() {
+      // 检查
+      if(!this.$refs.enroll_pages.checkCurrPage()) return
+
       const data = {
         id: this.userInfo.id,
         list: []
