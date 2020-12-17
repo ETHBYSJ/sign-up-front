@@ -22,16 +22,23 @@ export default {
     ...mapState(['userInfo', 'userState']),
   },
 
+  mounted() {
+    reqGetUserInfo().then(response => {
+      this.login(response.data.data).then(_ => {   
+        if (this.$route.path === '/not-logged') {
+          this.$router.push('/mine')
+        }
+      }).catch(_ => {})
+    }).catch(_ => {})
+  },
+
   methods: {
     ...mapActions(['login']),  
 
     handleLogin() {
       reqSetCookie().then(res => {
-        reqGetUserInfo().then(response => {
-          this.login(response.data.data)
-          this.$router.push('/mine')
-        }).catch(err => {})
-      }).catch(err => {})
+        this.$router.push('/mine')
+      }).catch(_ => {})
     }
   }
 }

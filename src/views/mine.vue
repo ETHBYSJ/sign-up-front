@@ -6,8 +6,8 @@
       <div class="mine-content-wapper">
         <el-table 
           :data="recordList" 
-          style="width: 100%"
-          @row-click="editEnroll(id)">
+          style="{width: 100%; padding: 0 14px;}"
+          @row-click="editEnroll">
           <el-table-column
             prop="title"
             label="标题">
@@ -54,13 +54,13 @@ export default {
           // 处理
           const { area } = JSON.parse(this.userInfo.extra)
           
-          for (item of res.data.data) {
+          for (var item of res.data.data) {
             var data = {}
             data.title = area + this.userInfo.name + '的报名'
             if (item.status === 'accepted') {
-              data.status = '已通过审核'
+              data.status = '审核通过'
             } else if (item.status === 'declined') {
-              data.status = '未通过审核'
+              data.status = '审核未通过'
             } else {
               data.status = '审核中'
             }
@@ -74,9 +74,11 @@ export default {
     }).catch(err => {})
   },
 
-  editEnroll(id) {
-    this.$router.push('/home')
-  },
+  methods: {
+    editEnroll(row) {
+      this.$router.push('/home')
+    },
+  }
 }
 </script>
 

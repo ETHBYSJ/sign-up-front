@@ -36,6 +36,7 @@ export default {
   data() {
     return {
       currPage: 0,
+      showModal: false,
     }
   },
 
@@ -53,43 +54,47 @@ export default {
       const page = this.inputList[this.currPage]
 
       var flag = true
-      if (page.name.content == '') {
+      if (!page.name.content && page.name.content == '') {
         flag = false
         page.name.dangerText = '请输入姓名'
       }
-      if (page.number.content == '') {
+      if (!page.number.content && page.number.content == '') {
         flag = false
         page.number.dangerText = '请输入身份证号码'
       }
-      if (page.department.content == '') {
+      if (!page.department.content && page.department.content == '') {
         flag = false
         page.department.dangerText = '请输入工作单位'
       }
-      if (page.position.content == '') {
+      if (!page.position.content && page.position.content == '') {
         flag = false
         page.position.dangerText = '请输入职务'
       }
-      if (page.mobile.content == '') {
+      if (!page.mobile.content && page.mobile.content == '') {
         flag = false
         page.mobile.dangerText = '请输入手机号'
       }
-      if (page.identity.content == '') {
+      if (!page.identity.content && page.identity.content == '') {
         flag = false
         page.identity.dangerText = '请选择参会身份'
       }
+<<<<<<< HEAD
       /*if (page.arriveId.content == '') {
+=======
+      if (!page.arriveId.content && page.arriveId.content == '') {
+>>>>>>> 30b609282ddd160ed86b64f702bca5dbad95b9ac
         flag = false
         page.arriveId.dangerText = '请输入来沪航班/车次号'
       }
-      if (page.arriveTime.content == '') {
+      if (!page.arriveTime.content && page.arriveTime.content == '') {
         flag = false
         page.arriveTime.dangerText = '请选择到沪时间'
       }
-      if (page.leaveId.content == '') {
+      if (!page.leaveId.content && page.leaveId.content == '') {
         flag = false
         page.leaveId.dangerText = '请输入离沪航班/车次号'
       }
-      if (page.leaveTime.content == '') {
+      if (!page.leaveTime.content && page.leaveTime.content == '') {
         flag = false
         page.leaveTime.dangerText = '请选择离沪时间'
       }*/
@@ -112,8 +117,10 @@ export default {
     deleteItem() {
       // 第一页不能删除
       if (this.currPage != 0) {
-        this.inputList.splice(this.currPage, 1)
-        this.currPage -= 1
+        this.$confirm('确认删除?').then(_ => {
+          this.inputList.splice(this.currPage, 1)
+          this.currPage -= 1
+        }).catch(_ => {})
       }
     }
   }

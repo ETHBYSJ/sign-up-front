@@ -19,7 +19,6 @@
 import HeadNavigation from '../components/HeadNavigation/HeadNavigation.vue'
 export default {
   components: { HeadNavigation },
-  
 }
 </script>
 
