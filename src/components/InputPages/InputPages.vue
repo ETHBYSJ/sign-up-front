@@ -77,7 +77,7 @@ export default {
         flag = false
         page.identity.dangerText = '请选择参会身份'
       }
-      if (page.arriveId.content == '') {
+      /*if (page.arriveId.content == '') {
         flag = false
         page.arriveId.dangerText = '请输入来沪航班/车次号'
       }
@@ -92,7 +92,7 @@ export default {
       if (page.leaveTime.content == '') {
         flag = false
         page.leaveTime.dangerText = '请选择离沪时间'
-      }
+      }*/
       return flag
     },
 
